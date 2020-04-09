@@ -113,6 +113,13 @@ public class CommandDAO {
 		this.commandProducts = commandProducts;
 	}
 
+	@Override
+	public String toString() {
+		return "CommandDAO [id=" + id + ", price=" + price + ", quantity=" + quantity + ", dateCommande=" + dateCommande
+				+ ", commandProducts=" + commandProducts + ", buyer=" + buyer + ", seller=" + seller + ", status="
+				+ status + "]";
+	}
+
 	
 
 	

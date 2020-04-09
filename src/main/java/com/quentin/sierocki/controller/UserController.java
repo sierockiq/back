@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.quentin.sierocki.controller.model.UserDTO;
+import com.quentin.sierocki.exception.fonctionnal.FunctionnalException;
 import com.quentin.sierocki.service.UserService;
+import com.quentin.sierocki.service.converter.ConvertionException;
 
 @RestController
 //@CrossOrigin(origins = "http://localhost:8082")
@@ -18,12 +20,12 @@ public class UserController {
 	UserService userService;
 
 	@GetMapping("/user/{idUser}")
-	public UserDTO getUser(@PathVariable String idUser) {
-		return userService.findUserById(Integer.valueOf(idUser));
+	public UserDTO getUser(@PathVariable int idUser) throws ConvertionException,  FunctionnalException {
+		return userService.findUserById(idUser);
 	}
-	
+
 	@GetMapping("/users")
-	public List<UserDTO> getUsers() {
+	public List<UserDTO> getUsers() throws ConvertionException, FunctionnalException {
 		return userService.findAllUsers();
 	}
 }

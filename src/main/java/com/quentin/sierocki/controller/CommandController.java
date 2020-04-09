@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.quentin.sierocki.controller.model.CommandDTO;
 import com.quentin.sierocki.exception.fonctionnal.FunctionnalException;
 import com.quentin.sierocki.service.CommandService;
+import com.quentin.sierocki.service.converter.ConvertionException;
 
 @RestController
 //@CrossOrigin(origins = "http://localhost:3000")
@@ -27,7 +28,7 @@ public class CommandController {
 
 	@PostMapping("/user/{idUser}/command")
 	public CommandDTO postProduct(@PathVariable String idUser, @Valid @RequestBody CommandDTO command)
-			throws FunctionnalException {
+			throws FunctionnalException, ConvertionException {
 		return commandService.save(idUser, command);
 	}
 

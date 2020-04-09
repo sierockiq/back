@@ -19,6 +19,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.quentin.sierocki.exception.fonctionnal.FunctionnalException;
+import com.quentin.sierocki.service.converter.ConvertionException;
 
 @ControllerAdvice
 public class ErrorHandler extends ResponseEntityExceptionHandler {
@@ -38,6 +39,15 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 	public final CustomErrorResponse handleFunctionnalException(FunctionnalException ex, WebRequest request) {
 		return this.getCustomErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage());
 	}
+	
+	@ExceptionHandler(ConvertionException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ResponseBody
+	public final CustomErrorResponse handleFunctionnalException(ConvertionException ex, WebRequest request) {
+		return this.getCustomErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage());
+	}
+	
+	
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

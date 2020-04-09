@@ -24,8 +24,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.quentin.sierocki.controller.model.UserDTO;
 import com.quentin.sierocki.exception.ResourceNotFoundException;
 import com.quentin.sierocki.exception.UnauthorizedAccessRessourceException;
+import com.quentin.sierocki.exception.fonctionnal.FunctionnalException;
 import com.quentin.sierocki.globals.LoggedInUser;
 import com.quentin.sierocki.service.UserService;
+import com.quentin.sierocki.service.converter.ConvertionException;
 import com.quentin.sierocki.websecurityconfig.UserDetails;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -49,7 +51,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws ServletException, IOException,UnauthorizedAccessRessourceException {
+			throws ServletException, IOException, UnauthorizedAccessRessourceException {
 		String idUser = null;
 		final String requestTokenHeader = request.getHeader("Authorization");
 		Pattern pattern = Pattern.compile(Pattern.quote("user/") + "(.*?)" + Pattern.quote("/"));
@@ -83,8 +85,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		}
 		// Once we get the token validate it.
 		if (id != 0 && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-			UserDTO user = userService.findUserById(id);
+			UserDTO user = null;
+			try {
+				user = userService.findUserById(id);
+			} catch (ConvertionException | FunctionnalException e) {
+				e.printStackTrace();
+			}
 
 			if (user == null) {
 				throw new ResourceNotFoundException("User", "id", id);
