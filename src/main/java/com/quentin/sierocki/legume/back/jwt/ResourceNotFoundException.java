@@ -1,4 +1,4 @@
-package com.quentin.sierocki.legume.back.exception;
+package com.quentin.sierocki.legume.back.jwt;
 
 //@ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends RuntimeException {

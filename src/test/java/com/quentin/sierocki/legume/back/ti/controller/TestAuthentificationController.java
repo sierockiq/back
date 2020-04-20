@@ -1,6 +1,6 @@
 package com.quentin.sierocki.legume.back.ti.controller;
 
-import java.util.Hashtable;
+import javax.transaction.Transactional;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,6 +9,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 
 import com.quentin.sierocki.legume.back.controller.AuthenticationController;
+import com.quentin.sierocki.legume.back.controller.ControllerException;
 import com.quentin.sierocki.legume.back.controller.converter.ConvertionException;
 import com.quentin.sierocki.legume.back.controller.model.UserDTO;
 import com.quentin.sierocki.legume.back.controller.model.ValidationException;
@@ -23,13 +24,13 @@ public class TestAuthentificationController extends SpringBootRestApplicationTes
 
 	// save in error
 	@Test(expected = ValidationException.class)
-	public void saveUser_null() throws ServiceException, ValidationException, ConvertionException {
+	public void saveUser_null() throws ServiceException, ValidationException, ConvertionException, ControllerException {
 		authController.saveUser(null);
 		Assert.fail();
 	}
 
 	@Test(expected = ValidationException.class)
-	public void saveUser_username_empty() throws ServiceException, ValidationException, ConvertionException {
+	public void saveUser_username_empty() throws ServiceException, ValidationException, ConvertionException, ControllerException {
 		UserDTO userDTO = Builder.createUser();
 		userDTO.setUsername("");
 		authController.saveUser(userDTO);
@@ -37,7 +38,7 @@ public class TestAuthentificationController extends SpringBootRestApplicationTes
 	}
 
 	@Test(expected = ValidationException.class)
-	public void saveUser_bad_pĥone() throws ServiceException, ValidationException, ConvertionException {
+	public void saveUser_bad_pĥone() throws ServiceException, ValidationException, ConvertionException, ControllerException {
 		UserDTO userDTO = Builder.createUser();
 		userDTO.setPhone("58");
 		authController.saveUser(userDTO);
@@ -46,7 +47,7 @@ public class TestAuthentificationController extends SpringBootRestApplicationTes
 
 	@Test(expected = ValidationException.class)
 	@Order(2)
-	public void saveUser_bad_password() throws ServiceException, ValidationException, ConvertionException {
+	public void saveUser_bad_password() throws ServiceException, ValidationException, ConvertionException, ControllerException {
 		UserDTO userDTO = Builder.createUser();
 		userDTO.setPassword("");
 		authController.saveUser(userDTO);
@@ -55,7 +56,7 @@ public class TestAuthentificationController extends SpringBootRestApplicationTes
 
 	@Test(expected = ValidationException.class)
 	@Order(2)
-	public void saveUser_bad_lat_lng() throws ServiceException, ValidationException, ConvertionException {
+	public void saveUser_bad_lat_lng() throws ServiceException, ValidationException, ConvertionException, ControllerException {
 		UserDTO userDTO = Builder.createUser();
 		userDTO.setLat(0.0f);
 		userDTO.setLng(0.0f);
@@ -64,7 +65,7 @@ public class TestAuthentificationController extends SpringBootRestApplicationTes
 	}
 
 	@Test(expected = ValidationException.class)
-	public void saveUser_bad_adress() throws ServiceException, ValidationException, ConvertionException {
+	public void saveUser_bad_adress() throws ServiceException, ValidationException, ConvertionException, ControllerException {
 		UserDTO userDTO = Builder.createUser();
 		userDTO.setAdress("");
 		authController.saveUser(userDTO);
@@ -72,7 +73,7 @@ public class TestAuthentificationController extends SpringBootRestApplicationTes
 	}
 
 	@Test(expected = ValidationException.class)
-	public void saveUser_bad_city() throws ServiceException, ValidationException, ConvertionException {
+	public void saveUser_bad_city() throws ServiceException, ValidationException, ConvertionException, ControllerException {
 		UserDTO userDTO = Builder.createUser();
 		userDTO.setCity("");
 		authController.saveUser(userDTO);
@@ -80,7 +81,7 @@ public class TestAuthentificationController extends SpringBootRestApplicationTes
 	}
 
 	@Test(expected = ValidationException.class)
-	public void saveUser_empty_email() throws ServiceException, ValidationException, ConvertionException {
+	public void saveUser_empty_email() throws ServiceException, ValidationException, ConvertionException, ControllerException {
 		UserDTO userDTO = Builder.createUser();
 		userDTO.setEmail("");
 		authController.saveUser(userDTO);
@@ -88,7 +89,7 @@ public class TestAuthentificationController extends SpringBootRestApplicationTes
 	}
 
 	@Test(expected = ValidationException.class)
-	public void saveUser_ad_format_email() throws ServiceException, ValidationException, ConvertionException {
+	public void saveUser_ad_format_email() throws ServiceException, ValidationException, ConvertionException, ControllerException {
 		UserDTO userDTO = Builder.createUser();
 		userDTO.setEmail("coxzekoaek");
 		authController.saveUser(userDTO);
@@ -96,7 +97,7 @@ public class TestAuthentificationController extends SpringBootRestApplicationTes
 	}
 
 	@Test
-	public void saveUser_ok() throws ServiceException, ValidationException, ConvertionException {
+	public void saveUser_ok() throws ServiceException, ValidationException, ConvertionException, ControllerException {
 		UserDTO userDTO = Builder.createUser();
 		authController.saveUser(userDTO);
 		UserDAO user = userRepository.findByUsername(userDTO.getUsername());
@@ -105,8 +106,8 @@ public class TestAuthentificationController extends SpringBootRestApplicationTes
 		
 	}
 
-	@Test(expected = ServiceException.class)
-	public void saveUser_2timeSameUserName() throws ServiceException, ValidationException, ConvertionException {
+	@Test(expected = ControllerException.class)
+	public void saveUser_2timeSameUserName() throws ServiceException, ValidationException, ConvertionException, ControllerException {
 		UserDTO userDTO = Builder.createUser();
 		authController.saveUser(userDTO);
 		authController.saveUser(userDTO);
@@ -120,13 +121,14 @@ public class TestAuthentificationController extends SpringBootRestApplicationTes
 	}
 	
 	@Test
+	@Transactional
 	public void loginOk() throws Exception {
 		UserDTO userDTO = Builder.createUser();
 		authController.saveUser(userDTO);
 		ResponseEntity<?> response = authController.login(Builder.createUser());
-		String responseStr = response.getBody().toString();
-		Assert.assertTrue(responseStr.contains("jwtToken"));
-		Assert.assertTrue(responseStr.contains("username"));
+		UserDTO userResult = (UserDTO) response.getBody();
+		Assert.assertEquals(userResult.getUsername(),"quentin");
+		Assert.assertNotNull(userResult.getToken());
 	}
 	
 	/*

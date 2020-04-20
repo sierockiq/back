@@ -17,7 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import com.quentin.sierocki.legume.back.websecurityconfig.SecurityConstants;
+import com.quentin.sierocki.legume.back.globals.Constants;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -49,11 +49,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	}
 
 	private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-		String token = request.getHeader(SecurityConstants.TOKEN_HEADER);
-		String idUser = request.getHeader(SecurityConstants.ID_USER);
-		if (token!=null && !token.isEmpty() && token.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+		String token = request.getHeader(Constants.TOKEN_HEADER);
+		String idUser = request.getHeader(Constants.ID_USER);
+		if (token!=null && !token.isEmpty() && token.startsWith(Constants.TOKEN_PREFIX)) {
 			try {
-				byte[] signingKey = SecurityConstants.JWT_SECRET.getBytes();
+				byte[] signingKey = Constants.JWT_SECRET.getBytes();
 
 				Jws<Claims> parsedToken = Jwts.parser().setSigningKey(signingKey)
 						.parseClaimsJws(token.replace("Bearer ", ""));

@@ -5,16 +5,17 @@ import com.quentin.sierocki.legume.back.exception.fonctionnal.FunctionnalExcepti
 public class ValidationException extends FunctionnalException {
 	private static final long serialVersionUID = 1L;
 
-	public ValidationException(String message) {
+	public ValidationException(String messageRetour,String message) {
 		super(message);
-	}
-	
-	public ValidationException(String path,String message, Throwable cause) {
-		super(path,message, cause);
+		this.setMessageRetour(messageRetour);
 	}
 
-	public ValidationException(String path,String message) {
-		super(path,message);
+	public ValidationException(String messageRetour, String path, String message, Throwable cause) {
+		super(messageRetour, path, message, cause);
 	}
-	
+
+	public ValidationException(String messageRetour, String path, String message) {
+		super(messageRetour, path, message);
+	}
+
 }

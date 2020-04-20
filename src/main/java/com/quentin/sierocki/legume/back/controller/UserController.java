@@ -24,7 +24,7 @@ public class UserController {
 		try {
 			return DAOToDTOConverter.userDAOToUserDTO(userService.findUserById(idUser));
 		} catch (ServiceException | ConvertionException e) {
-			throw new ControllerException("UserController->getUser" + e.getPathMethod(), e.getMessage(), e);
+			throw new ControllerException(e.getMessageRetour(),"UserController->getUser" + e.getPathMethod(), e.getMessage(), e);
 		}
 
 	}
@@ -34,7 +34,7 @@ public class UserController {
 		try {
 			return userService.findAllUsers();
 		} catch (ServiceException e) {
-			throw new ControllerException("UserController->getUsers" + e.getPathMethod(), e.getMessage(), e);
+			throw new ControllerException(e.getMessageRetour(),"UserController->getUsers" + e.getPathMethod(), e.getMessage(), e);
 		}
 
 	}

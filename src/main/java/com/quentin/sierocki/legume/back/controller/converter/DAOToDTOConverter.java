@@ -1,7 +1,6 @@
 package com.quentin.sierocki.legume.back.controller.converter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import javax.transaction.Transactional;
 
@@ -14,6 +13,7 @@ import com.quentin.sierocki.legume.back.domain.entity.CommandProductDAO;
 import com.quentin.sierocki.legume.back.domain.entity.ProductDAO;
 import com.quentin.sierocki.legume.back.domain.entity.ProductStatus;
 import com.quentin.sierocki.legume.back.domain.entity.UserDAO;
+import com.quentin.sierocki.legume.back.globals.Constants;
 
 public class DAOToDTOConverter {
 
@@ -36,7 +36,7 @@ public class DAOToDTOConverter {
 			commandDTO.setIdSeller(commandDAO.getSeller().getId());
 			return commandDTO;
 		}catch(Exception e) {
-			throw new ConvertionException("DAOToDTOConverter->commandDAOToCommandDTO - " , commandDAO.toString(),e);
+			throw new ConvertionException(Constants.ERROR_CONVERTION,"DAOToDTOConverter->commandDAOToCommandDTO - " , commandDAO.toString(),e);
 		}
 	}
 
@@ -51,7 +51,7 @@ public class DAOToDTOConverter {
 			commandProductDTO.setStatus(commProductDAO.getStatus().name());
 			return commandProductDTO;
 		}catch(Exception e) {
-			throw new ConvertionException("DAOToDTOConverter->commandProductDAOToCommandProductDTO - " , commProductDAO.toString(),e);
+			throw new ConvertionException(Constants.ERROR_CONVERTION,"DAOToDTOConverter->commandProductDAOToCommandProductDTO - " , commProductDAO.toString(),e);
 		}	
 	}
 
@@ -67,7 +67,7 @@ public class DAOToDTOConverter {
 			productDTO.setStatus(productDAO.getStatus().name());
 			return productDTO;
 		}catch(Exception e) {
-			throw new ConvertionException("DAOToDTOConverter->productDAOToProductDTO - " , productDAO.toString(),e);
+			throw new ConvertionException(Constants.ERROR_CONVERTION,"DAOToDTOConverter->productDAOToProductDTO - " , productDAO.toString(),e);
 		}	
 	}
 
@@ -94,7 +94,7 @@ public class DAOToDTOConverter {
 			}
 			return userDTO;
 		}catch(Exception e) {
-			throw new ConvertionException("DAOToDTOConverter->userDAOToUserDTOWithoutCommands - " , userDAO.toString(),e);
+			throw new ConvertionException(Constants.ERROR_CONVERTION,"DAOToDTOConverter->userDAOToUserDTOWithoutCommands - " , userDAO.toString(),e);
 		}	
 		
 		
@@ -118,7 +118,7 @@ public class DAOToDTOConverter {
 			}
 			return userDTO;
 		}catch(Exception e) {
-			throw new ConvertionException("DAOToDTOConverter->userDAOToUserDTO - " , userDAO.toString(),e);
+			throw new ConvertionException(Constants.ERROR_CONVERTION,"DAOToDTOConverter->userDAOToUserDTO - " , userDAO.toString(),e);
 		}	
 		
 		

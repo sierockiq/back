@@ -10,12 +10,12 @@ public class ServiceException extends FunctionnalException {
 		super(message);
 	}
 	
-	public ServiceException(String path,String message, Throwable cause) {
-		super(path,message, cause);
+	public ServiceException(String messageRetour,String path,String message, Throwable cause) {
+		super(messageRetour,path,message, cause);
 	}
 
-	public ServiceException(String path,String message) {
-		super(path,message);
+	public ServiceException(String messageRetour,String path,String message) {
+		super(messageRetour,path,message);
 	}
 
 }

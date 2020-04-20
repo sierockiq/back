@@ -28,19 +28,25 @@ public class AuthenticationController {
 	@PostMapping(value = "/login")
 	public ResponseEntity<?> login(@RequestBody UserDTO userLogin) throws Exception {
 		UserDTO user = DAOToDTOConverter.userDAOToUserDTO(userService.findUserByUserName(userLogin.getUsername()));
-		String token = authenticationService.login(String.valueOf(user.getId()), user.getUsername(), userLogin.getPassword());
+		String token = authenticationService.login(String.valueOf(user.getId()), user.getUsername(),
+				userLogin.getPassword());
 		user.setToken(token);
 		return ResponseEntity.ok(user);
 	}
 
 	@PostMapping(value = "/register")
-	public ResponseEntity<?> saveUser(@RequestBody UserDTO user)
-			throws ServiceException, ValidationException, ConvertionException {
-		if (user == null)
-			throw new ValidationException("user est null");
+	public ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws ValidationException, ControllerException {
+		try {
+			if (user == null)
+				throw new ValidationException("Votre utilisateur n'existe pas. Veuillez le créer.", "user est null");
 
-		user.validate();
-		return ResponseEntity.ok(DAOToDTOConverter.userDAOToUserDTO(userService.save(user)));
+			user.validate();
+			return ResponseEntity.ok(DAOToDTOConverter.userDAOToUserDTO(userService.save(user)));
+		} catch (ServiceException | ConvertionException e) {
+			throw new ControllerException(e.getMessageRetour(), "ProductController->addNewProduct" + e.getPathMethod(),
+					e.getMessage(), e);
+		}
+
 	}
 
 	@GetMapping(value = "/test")

@@ -11,6 +11,7 @@ import com.quentin.sierocki.legume.back.domain.entity.CommandProductDAO;
 import com.quentin.sierocki.legume.back.domain.entity.ProductDAO;
 import com.quentin.sierocki.legume.back.domain.entity.ProductTypeDAO;
 import com.quentin.sierocki.legume.back.domain.entity.UserDAO;
+import com.quentin.sierocki.legume.back.globals.Constants;
 
 public class DTOToDAOConverter {
 
@@ -33,7 +34,8 @@ public class DTOToDAOConverter {
 			}
 			return commandDAO;
 		} catch (Exception e) {
-			throw new ConvertionException("DTOToDAOConverter->commandDTOToCommandDAO - " , commandDTO.toString(), e);
+			throw new ConvertionException(Constants.ERROR_CONVERTION, "DTOToDAOConverter->commandDTOToCommandDAO - ",
+					commandDTO.toString(), e);
 		}
 	}
 
@@ -42,12 +44,14 @@ public class DTOToDAOConverter {
 			ProductDAO productDAO = new ProductDAO();
 			productDAO.setId(productDTO.getId());
 			productDAO.setPrice(productDTO.getPrice());
-			productDAO.setQuantity(productDTO.getId() == 0 ? productDTO.getInitialQuantity() : productDTO.getQuantity());
+			productDAO
+					.setQuantity(productDTO.getId() == 0 ? productDTO.getInitialQuantity() : productDTO.getQuantity());
 			productDAO.setInitialQuantity(productDTO.getInitialQuantity());
 			productDAO.setProductType(new ProductTypeDAO(productDTO.getProductTypeName()));
 			return productDAO;
 		} catch (Exception e) {
-			throw new ConvertionException("DTOToDAOConverter->productDTOToProductDAO - " , productDTO.toString(), e);
+			throw new ConvertionException(Constants.ERROR_CONVERTION, "DTOToDAOConverter->productDTOToProductDAO - ",
+					productDTO.toString(), e);
 		}
 
 	}
@@ -66,7 +70,8 @@ public class DTOToDAOConverter {
 			userDAO.setPhone(userDTO.getPhone());
 			return userDAO;
 		} catch (Exception e) {
-			throw new ConvertionException("DTOToDAOConverter->userDTOToUserDAO - " , userDTO.toString(), e);
+			throw new ConvertionException(Constants.ERROR_CONVERTION, "DTOToDAOConverter->userDTOToUserDAO - ",
+					userDTO.toString(), e);
 		}
 
 	}
@@ -77,13 +82,13 @@ public class DTOToDAOConverter {
 			CommandProductDAO commandProductDAO = new CommandProductDAO();
 			commandProductDAO.setPrice(commandProduct.getPrice());
 			commandProductDAO.setQuantity(commandProduct.getQuantity());
-			ProductDAO productDAO =new ProductDAO();
+			ProductDAO productDAO = new ProductDAO();
 			productDAO.setId(commandProduct.getIdProduct());
 			commandProductDAO.setProduct(productDAO);
 			return commandProductDAO;
 		} catch (Exception e) {
-			throw new ConvertionException(
-					"DTOToDAOConverter->commandProductDTOToCommandProductDAO - " , commandProduct.toString(), e);
+			throw new ConvertionException(Constants.ERROR_CONVERTION,
+					"DTOToDAOConverter->commandProductDTOToCommandProductDAO - ", commandProduct.toString(), e);
 		}
 
 	}

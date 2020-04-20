@@ -1,5 +1,7 @@
 package com.quentin.sierocki.legume.back.ti.controller;
 
+import javax.transaction.Transactional;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,27 +61,30 @@ public class TestCommandController extends SpringBootRestApplicationTest {
 	}
 
 	// method save test with all bad element
-	@Test(expected = ControllerException.class)
-	public void postCommand_ko_id_seller() throws ControllerException {
+	@Test(expected = ValidationException.class)
+	public void postCommand_ko_id_seller() throws ControllerException, ValidationException {
 		commandDTO.setIdSeller(0);
 		commandController.postCommand(userDAO2.getId(), commandDTO);
 	}
 
-	@Test(expected = ControllerException.class)
-	public void postCommand_ko_price() throws ControllerException {
+	@Test(expected = ValidationException.class)
+	public void postCommand_ko_price() throws ControllerException, ValidationException {
 		commandDTO.setPrice(0);
 		commandController.postCommand(userDAO2.getId(), commandDTO);
 	}
 
-	@Test(expected = ControllerException.class)
-	public void postCommand_ko_quantity() throws ControllerException {
+	@Test(expected = ValidationException.class)
+	public void postCommand_ko_quantity() throws ControllerException, ValidationException {
 		commandDTO.setQuantity(0);
 		commandController.postCommand(userDAO2.getId(), commandDTO);
 	}
 
 	@Test
-	public void postCommand_ok() throws ServiceException, ControllerException {
+	@Transactional 
+	public void postCommand_ok() throws ServiceException, ControllerException, ValidationException {
 		CommandDTO cmd = commandController.postCommand(userDAO2.getId(), commandDTO);
+		productRepository.flush();
+		commandRepository.flush();
 		ProductDAO prodAfter = productService.findProductById(productDAOUser1.getId());
 		Assert.assertNull(cmd.getCloseDate());
 		Assert.assertEquals(cmd.getPrice(), commandDTO.getPrice(), 0.01);
@@ -94,16 +99,17 @@ public class TestCommandController extends SpringBootRestApplicationTest {
 		}
 		Assert.assertEquals(prodAfter.getInitialQuantity(), productDAOUser1.getInitialQuantity(), 0.01);
 		Assert.assertEquals(prodAfter.getPrice(), productDAOUser1.getPrice(), 0.01);
-		Assert.assertEquals(prodAfter.getQuantity(), productDAOUser1.getQuantity() - commandDTO.getQuantity(), 0.01);
+		Assert.assertEquals(prodAfter.getQuantity(), Builder.quantityInitialProduct- commandDTO.getQuantity(), 0.01);
 	}
 
 	@Test
+	@Transactional 
 	public void cancelCommand_ok()
 			throws ServiceException, ConvertionException, ValidationException, ControllerException {
 		CommandDTO cmd = commandController.postCommand(userDAO2.getId(), commandDTO);
 		cmd = commandController.cancelCommand(userDAO2.getId(), cmd.getId(), CommandStatus.CANCELED.name());
+		
 		ProductDAO prodAfter = productService.findProductById(productDAOUser1.getId());
-
 		Assert.assertNotNull(cmd.getCloseDate());
 		Assert.assertEquals(cmd.getPrice(), commandDTO.getPrice(), 0.01);
 		Assert.assertEquals(cmd.getQuantity(), commandDTO.getQuantity(), 0.01);

@@ -12,7 +12,7 @@ import com.quentin.sierocki.legume.back.domain.entity.CommandStatus;
 import com.quentin.sierocki.legume.back.domain.entity.UserDAO;
 import com.quentin.sierocki.legume.back.domain.repository.CommandProductRepository;
 import com.quentin.sierocki.legume.back.domain.repository.CommandRepository;
-import com.quentin.sierocki.legume.back.exception.fonctionnal.FunctionnalException;
+import com.quentin.sierocki.legume.back.globals.Constants;
 
 @Service
 public class CommandService {
@@ -47,7 +47,8 @@ public class CommandService {
 			command.setBuyer(userBuyer);
 			command.setSeller(userSeller);
 			for (CommandProductDAO commandProductDAO : command.getCommandProducts()) {
-				if(commandProductDAO == null || commandProductDAO.getProduct()==null || commandProductDAO.getProduct().getId() == 0)
+				if (commandProductDAO == null || commandProductDAO.getProduct() == null
+						|| commandProductDAO.getProduct().getId() == 0)
 					throw new ServiceException("Le produit commandé n'est pas présent.");
 				productService.updateProductQuantityWhenUserMakeCommand(commandProductDAO.getProduct().getId(),
 						commandProductDAO.getQuantity(), userSeller.getId());
@@ -59,7 +60,7 @@ public class CommandService {
 			CommandDAO commandSaved = commandRepository.save(command);
 			return commandSaved;
 		} catch (Exception e) {
-			throw new ServiceException("CommandService->save - " , e.getMessage(), e);
+			throw new ServiceException(Constants.ERROR_SERVICE, "CommandService->save - ", e.getMessage(), e);
 		}
 	}
 
@@ -91,12 +92,12 @@ public class CommandService {
 			CommandDAO commandSaved = commandRepository.save(commandDAO);
 			return commandSaved;
 		} catch (Exception e) {
-			throw new ServiceException("CommandService->updateCommand - " , e.getMessage(), e);
+			throw new ServiceException(Constants.ERROR_SERVICE, "CommandService->updateCommand - ", e.getMessage(), e);
 		}
 	}
 
 	public void changeStatusByProductId(long idProduct, CommandStatus commandStatus) {
-		
+
 		List<CommandProductDAO> listCommandProduct = commandProductRepository.findByProduct_Id(idProduct);
 		if (listCommandProduct != null) {
 			for (CommandProductDAO commandProductDAO : listCommandProduct) {
@@ -105,7 +106,7 @@ public class CommandService {
 			}
 		}
 		commandProductRepository.saveAll(listCommandProduct);
-		
+
 	}
 
 	public CommandDAO findCommandById(long idCommand) throws ServiceException {
@@ -116,7 +117,8 @@ public class CommandService {
 
 			return commandDAO;
 		} catch (Exception e) {
-			throw new ServiceException("ProductService->findCommandById - " , e.getMessage(), e);
+			throw new ServiceException(Constants.ERROR_SERVICE, "ProductService->findCommandById - ", e.getMessage(),
+					e);
 		}
 	}
 

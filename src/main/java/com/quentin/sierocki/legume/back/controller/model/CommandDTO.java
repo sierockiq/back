@@ -2,7 +2,8 @@ package com.quentin.sierocki.legume.back.controller.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
+
+import com.quentin.sierocki.legume.back.globals.Constants;
 
 public class CommandDTO {
 
@@ -110,13 +111,13 @@ public class CommandDTO {
 
 	public void validate() throws ValidationException {
 		if (idSeller <= 0)
-			throw new ValidationException(this.toString() + " idSeller <=0.");
+			throw new ValidationException(Constants.ERROR_VALIDATION_ID_SELLER,this.toString() + " idSeller <=0.");
 		if (price <= 0)
-			throw new ValidationException(this.toString() + " price <=0.");
+			throw new ValidationException(Constants.ERROR_VALIDATION_PRICE,this.toString() + " price <=0.");
 		if (quantity <= 0 )
-			throw new ValidationException(this.toString() + " quantity  <=0.");
+			throw new ValidationException(Constants.ERROR_VALIDATION_QUANTITY,this.toString() + " quantity  <=0.");
 		if (commandProducts == null || commandProducts.size() == 0)
-			throw new ValidationException(this.toString() + " commandProducts null ou de taille 0.");
+			throw new ValidationException(Constants.ERROR_VALIDATION_COMMAND_PRODUCTS,this.toString() + " commandProducts null ou de taille 0.");
 		float calcQuantity = 0, calcPrice = 0;
 		for (CommandProductDTO commandProductDTO : commandProducts) {
 			commandProductDTO.validate();
@@ -124,7 +125,7 @@ public class CommandDTO {
 			calcPrice = calcPrice + commandProductDTO.getPrice();
 		}
 		if (Math.abs(calcQuantity - this.quantity) > 0.01 || Math.abs(calcPrice - this.price) > 0.01)
-			throw new ValidationException(this.toString() + " pb de cohérence des données.");
+			throw new ValidationException(Constants.ERROR_VALIDATION_INCOHERENTE_QUANTITY,this.toString() + " pb de cohérence des données.");
 	}
 
 }

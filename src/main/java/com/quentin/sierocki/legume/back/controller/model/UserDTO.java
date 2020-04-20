@@ -134,19 +134,19 @@ public class UserDTO {
 
 	public void validate() throws ValidationException {
 		if(username == null || username.isEmpty())
-			throw new ValidationException(this.toString() + " username null ou empty");
+			throw new ValidationException(Constants.ERROR_VALIDATION_USERNAME,this.toString() + " username null ou empty");
 		if(password == null || password.isEmpty())
-			throw new ValidationException(this.toString() + " password null ou empty");
+			throw new ValidationException(Constants.ERROR_VALIDATION_PASSWORD,this.toString() + " password null ou empty");
 		if (    adress == null|| adress.isEmpty() )
-			throw new ValidationException(this.toString() + " adress null ou empty");
+			throw new ValidationException(Constants.ERROR_VALIDATION_ADDRESS,this.toString() + " adress null ou empty");
 		if (    city == null|| city.isEmpty() )
-			throw new ValidationException(this.toString() +" city null ou empty");
+			throw new ValidationException(Constants.ERROR_VALIDATION_CITY,this.toString() +" city null ou empty");
 		if (     email == null || email.isEmpty() || !Pattern.compile(Constants.REGEXP_EMAIL).matcher(email).matches())
-			throw new ValidationException(this.toString() +" email null ou empty ou incorrect");
+			throw new ValidationException(Constants.ERROR_VALIDATION_EMAIL,this.toString() +" email null ou empty ou incorrect");
 		if(phone == null || phone.length()!=10 || phone.isEmpty()  ) 
-			throw new ValidationException(this.toString() + " phone null ou empty ou pas de 10 chiffres");
+			throw new ValidationException(Constants.ERROR_VALIDATION_PHONE,this.toString() + " phone null ou empty ou pas de 10 chiffres");
 		if(Math.abs(lat) <0.01 && Math.abs(lng) < 0.01)
-			throw new ValidationException(this.toString() + " lat et lng sont à 0");
+			throw new ValidationException(Constants.ERROR_VALIDATION_LAT_LNG,this.toString() + " lat et lng sont à 0");
 	}
 
 }

@@ -14,6 +14,7 @@ import com.quentin.sierocki.legume.back.controller.model.UserDTO;
 import com.quentin.sierocki.legume.back.domain.entity.UserDAO;
 import com.quentin.sierocki.legume.back.domain.repository.UserRepository;
 import com.quentin.sierocki.legume.back.exception.fonctionnal.FunctionnalException;
+import com.quentin.sierocki.legume.back.globals.Constants;
 
 @Service
 public class UserService {
@@ -26,7 +27,7 @@ public class UserService {
 
 	/**
 	 * @param idUser
-	 * @return 
+	 * @return
 	 * @throws ServiceException
 	 */
 	/**
@@ -42,13 +43,12 @@ public class UserService {
 
 			return userDAO;
 		} catch (Exception e) {
-			throw new ServiceException("UserService->findUserById - ", e.getMessage(), e);
+			throw new ServiceException(Constants.ERROR_SERVICE, "UserService->findUserById - ", e.getMessage(), e);
 		}
 	}
 
-	
 	/**
-	 * @return 
+	 * @return
 	 * @throws ServiceException
 	 */
 	public List<UserDTO> findAllUsers() throws ServiceException {
@@ -65,7 +65,7 @@ public class UserService {
 
 			return usersDTO;
 		} catch (Exception e) {
-			throw new ServiceException("UserService->findAllUsers - ", e.getMessage(), e);
+			throw new ServiceException(Constants.ERROR_SERVICE, "UserService->findAllUsers - ", e.getMessage(), e);
 		}
 	}
 
@@ -84,7 +84,8 @@ public class UserService {
 				throw new ServiceException("Le user n'existe pas pour le username " + userName);
 			return userDAO;
 		} catch (Exception e) {
-			throw new ServiceException("UserService->findUserByUserName - " , e.getMessage(), e);
+			throw new ServiceException(Constants.ERROR_SERVICE, "UserService->findUserByUserName - ", e.getMessage(),
+					e);
 		}
 	}
 
@@ -112,7 +113,7 @@ public class UserService {
 			return userRepository.save(newUser);
 
 		} catch (Exception e) {
-			throw new ServiceException("UserService->save - " , e.getMessage(), e);
+			throw new ServiceException(Constants.ERROR_SERVICE, "UserService->save - ", e.getMessage(), e);
 		}
 	}
 

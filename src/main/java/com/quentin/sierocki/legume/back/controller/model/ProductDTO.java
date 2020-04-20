@@ -1,5 +1,7 @@
 package com.quentin.sierocki.legume.back.controller.model;
 
+import com.quentin.sierocki.legume.back.globals.Constants;
+
 public class ProductDTO {
 
 	private long id;
@@ -77,13 +79,13 @@ public class ProductDTO {
 
 	public void validate() throws ValidationException {
 		if (initialQuantity <= 0)
-			throw new ValidationException(this.toString() + "initialQuantity <=0");
+			throw new ValidationException(Constants.ERROR_VALIDATION_QUANTITY,this.toString() + "initialQuantity <=0");
 		if (price <= 0)
-			throw new ValidationException(this.toString() + "price <=0");
+			throw new ValidationException(Constants.ERROR_VALIDATION_PRICE,this.toString() + "price <=0");
 		if (productTypeName == null || productTypeName.isEmpty())
-			throw new ValidationException(this.toString() + "productTypeName null ou empty");
+			throw new ValidationException(Constants.ERROR_VALIDATION_PRODUCT_TYPE_NAME,this.toString() + "productTypeName null ou empty");
 		if (initialQuantity < quantity)
-			throw new ValidationException(this.toString() + "initialQuantity<quantity");
+			throw new ValidationException(Constants.ERROR_VALIDATION_QUANTITY_SUP_INITIAL_QUANTITY,this.toString() + "initialQuantity<quantity");
 
 	}
 

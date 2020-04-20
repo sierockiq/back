@@ -1,5 +1,7 @@
 package com.quentin.sierocki.legume.back.ti.controller;
 
+import javax.transaction.Transactional;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +13,7 @@ import com.quentin.sierocki.legume.back.controller.converter.DTOToDAOConverter;
 import com.quentin.sierocki.legume.back.controller.model.CommandDTO;
 import com.quentin.sierocki.legume.back.controller.model.CommandProductDTO;
 import com.quentin.sierocki.legume.back.controller.model.ProductDTO;
+import com.quentin.sierocki.legume.back.controller.model.ValidationException;
 import com.quentin.sierocki.legume.back.domain.entity.CommandDAO;
 import com.quentin.sierocki.legume.back.domain.entity.CommandProductDAO;
 import com.quentin.sierocki.legume.back.domain.entity.CommandStatus;
@@ -75,40 +78,40 @@ public class TestProductController extends SpringBootRestApplicationTest {
 	}
 
 	// method save test with all bad element
-	@Test(expected = ControllerException.class)
-	public void addNewProduct_bad_product_initial_quantity() throws ControllerException {
+	@Test(expected = ValidationException.class)
+	public void addNewProduct_bad_product_initial_quantity() throws ControllerException, ValidationException {
 		ProductDTO productDTO = Builder.createProduct();
 		productDTO.setInitialQuantity(0);
 		productController.addNewProduct(userDAO1.getId(), productDTO);
 		Assert.fail();
 	}
 
-	@Test(expected = ControllerException.class)
-	public void addNewProduct_bad_product_price() throws ControllerException {
+	@Test(expected = ValidationException.class)
+	public void addNewProduct_bad_product_price() throws ControllerException, ValidationException {
 		ProductDTO productDTO = Builder.createProduct();
 		productDTO.setPrice(0);
 		productController.addNewProduct(userDAO1.getId(), productDTO);
 		Assert.fail();
 	}
 
-	@Test(expected = ControllerException.class)
-	public void addNewProduct_bad_product_quantity_sup_initial_quantity() throws ControllerException {
+	@Test(expected = ValidationException.class)
+	public void addNewProduct_bad_product_quantity_sup_initial_quantity() throws ControllerException, ValidationException {
 		ProductDTO productDTO = Builder.createProduct();
 		productDTO.setQuantity(250000);
 		productController.addNewProduct(userDAO1.getId(), productDTO);
 		Assert.fail();
 	}
 
-	@Test(expected = ControllerException.class)
-	public void addNewProduct_bad_product_type_name_empty() throws ControllerException {
+	@Test(expected = ValidationException.class)
+	public void addNewProduct_bad_product_type_name_empty() throws ControllerException, ValidationException {
 		ProductDTO productDTO = Builder.createProduct();
 		productDTO.setProductTypeName("");
 		productController.addNewProduct(userDAO1.getId(), productDTO);
 		Assert.fail();
 	}
 
-	@Test(expected = ControllerException.class)
-	public void addNewProduct_bad_product_type_name_null() throws ControllerException {
+	@Test(expected = ValidationException.class)
+	public void addNewProduct_bad_product_type_name_null() throws ControllerException, ValidationException {
 		ProductDTO productDTO = Builder.createProduct();
 		productDTO.setProductTypeName(null);
 		productController.addNewProduct(userDAO1.getId(), productDTO);
@@ -116,14 +119,14 @@ public class TestProductController extends SpringBootRestApplicationTest {
 	}
 
 	@Test(expected = ControllerException.class)
-	public void addNewProduct_bad_id_user() throws ControllerException {
+	public void addNewProduct_bad_id_user() throws ControllerException, ValidationException {
 		ProductDTO productDTO = Builder.createProduct();
 		productController.addNewProduct(1, productDTO);
 		Assert.fail();
 	}
 
 	@Test
-	public void addNewProduct_OK_with_quantity() throws ControllerException {
+	public void addNewProduct_OK_with_quantity() throws ControllerException, ValidationException {
 		ProductDTO productDTO = Builder.createProduct();
 		ProductDTO prodRet = productController.addNewProduct(userDAO1.getId(), productDTO);
 		Assert.assertEquals(productDTO.getInitialQuantity(), prodRet.getInitialQuantity(), 0.01);
@@ -134,7 +137,7 @@ public class TestProductController extends SpringBootRestApplicationTest {
 	}
 
 	@Test
-	public void addNewProduct_OK_without_quantity() throws ControllerException {
+	public void addNewProduct_OK_without_quantity() throws ControllerException, ValidationException {
 		ProductDTO productDTO = Builder.createProduct();
 		productDTO.setQuantity(0);
 		ProductDTO prodRet = productController.addNewProduct(userDAO1.getId(), productDTO);
@@ -146,7 +149,7 @@ public class TestProductController extends SpringBootRestApplicationTest {
 	}
 
 	@Test
-	public void addNewProduct_OK_with_bad_status() throws ControllerException {
+	public void addNewProduct_OK_with_bad_status() throws ControllerException, ValidationException {
 		ProductDTO productDTO = Builder.createProduct();
 		productDTO.setStatus(ProductStatus.UNAVAILABLE.name());
 		ProductDTO prodRet = productController.addNewProduct(userDAO1.getId(), productDTO);
@@ -165,6 +168,7 @@ public class TestProductController extends SpringBootRestApplicationTest {
 	}
 
 	@Test
+	@Transactional 
 	public void cancelProduct_ok_without_command() throws ServiceException, ControllerException {
 		prepareContextCancel();
 		productController.cancelProduct(userDAO1.getId(), productDAOUser1.getId());
@@ -177,14 +181,17 @@ public class TestProductController extends SpringBootRestApplicationTest {
 	}
 
 	@Test
+	@Transactional 
 	public void cancelProduct_ok_with_command() throws ServiceException, ControllerException {
 		prepareContextCancel();
 		prepareContextCommand();
 		productController.cancelProduct(userDAO1.getId(), productDAOUser1.getId());
+		productRepository.flush();
+		commandRepository.flush();
 		ProductDAO prodRet = productService.findProductById(productDAOUser1.getId());
 		CommandDAO commRet = commandService.findCommandById(commandDAO.getId());
 		Assert.assertEquals(productDAOUser1.getInitialQuantity(), prodRet.getInitialQuantity(), 0.01);
-		Assert.assertEquals(productDAOUser1.getQuantity() - commandDAO.getQuantity(), prodRet.getQuantity(), 0.01);
+		Assert.assertEquals(Builder.quantityInitialProduct - commandDAO.getQuantity(), prodRet.getQuantity(), 0.01);
 		Assert.assertEquals(productDAOUser1.getPrice(), prodRet.getPrice(), 0.01);
 		Assert.assertEquals(productDAOUser1.getProductType().getName(), prodRet.getProductType().getName());
 		Assert.assertEquals(prodRet.getStatus().name(), ProductStatus.UNAVAILABLE.name());

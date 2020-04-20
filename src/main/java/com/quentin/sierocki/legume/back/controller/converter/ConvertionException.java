@@ -8,13 +8,13 @@ public class ConvertionException extends FunctionnalException {
 	public ConvertionException(String message) {
 		super(message);
 	}
-	
-	public ConvertionException(String path,String message, Throwable cause) {
-		super(path,message, cause);
+
+	public ConvertionException(String messageRetour, String path, String message, Throwable cause) {
+		super(messageRetour, path, message, cause);
 	}
 
-	public ConvertionException(String path,String message) {
-		super(path,message);
+	public ConvertionException(String messageRetour, String path, String message) {
+		super(messageRetour, path, message);
 	}
-	
+
 }

@@ -14,7 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-import com.quentin.sierocki.legume.back.websecurityconfig.SecurityConstants;
+import com.quentin.sierocki.legume.back.globals.Constants;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -36,19 +36,19 @@ public class AuthenticationService {
 	            .map(GrantedAuthority::getAuthority)
 	            .collect(Collectors.toList());
 
-	        byte[] signingKey = SecurityConstants.JWT_SECRET.getBytes();
+	        byte[] signingKey = Constants.JWT_SECRET.getBytes();
 
 	        String token = Jwts.builder()
 	            .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
-	            .setHeaderParam("typ", SecurityConstants.TOKEN_TYPE)
-	            .setIssuer(SecurityConstants.TOKEN_ISSUER)
-	            .setAudience(SecurityConstants.TOKEN_AUDIENCE)
+	            .setHeaderParam("typ", Constants.TOKEN_TYPE)
+	            .setIssuer(Constants.TOKEN_ISSUER)
+	            .setAudience(Constants.TOKEN_AUDIENCE)
 	            .setSubject(user.getUsername())
 	            .setId(idUser)
 	            .setExpiration(new Date(System.currentTimeMillis() + 864000000))
 	            .claim("rol", roles)
 	            .compact();
-	        return SecurityConstants.TOKEN_PREFIX + token;
+	        return Constants.TOKEN_PREFIX + token;
 
 		} catch (DisabledException e) {
 			throw new Exception("USER_DISABLED", e);

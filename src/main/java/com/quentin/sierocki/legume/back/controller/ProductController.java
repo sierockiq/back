@@ -1,11 +1,13 @@
 package com.quentin.sierocki.legume.back.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.quentin.sierocki.legume.back.controller.converter.ConvertionException;
@@ -23,14 +25,15 @@ public class ProductController {
 	ProductService productService;
 
 	@PostMapping("/product/save")
+	@ResponseStatus(code = HttpStatus.CREATED)
 	public ProductDTO addNewProduct(@RequestHeader long idUser, @RequestBody ProductDTO productDTO)
-			throws ControllerException {
+			throws ControllerException,ValidationException {
 		try {
 			productDTO.validate();
 			return DAOToDTOConverter.productDAOToProductDTO(
 					productService.addNewProduct(idUser, DTOToDAOConverter.productDTOToProductDAO(productDTO)));
-		} catch (ServiceException | ConvertionException | ValidationException e) {
-			throw new ControllerException("ProductController->addNewProduct" + e.getPathMethod(), e.getMessage(), e);
+		} catch (ServiceException | ConvertionException  e) {
+			throw new ControllerException(e.getMessageRetour(),"ProductController->addNewProduct" + e.getPathMethod(), e.getMessage(), e);
 		}
 	}
 
@@ -39,7 +42,7 @@ public class ProductController {
 		try {
 			productService.cancelProduct(idUser, idProduct);
 		} catch (ServiceException e) {
-			throw new ControllerException("ProductController->cancelProduct" + e.getPathMethod(), e.getMessage(), e);
+			throw new ControllerException(e.getMessageRetour(),"ProductController->cancelProduct" + e.getPathMethod(), e.getMessage(), e);
 		}
 	}
 

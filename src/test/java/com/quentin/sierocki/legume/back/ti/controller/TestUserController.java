@@ -2,6 +2,8 @@ package com.quentin.sierocki.legume.back.ti.controller;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ public class TestUserController extends SpringBootRestApplicationTest {
 	}
 
 	@Test
+	@Transactional 
 	public void getUsers_OK() throws Exception {
 		userService.save(Builder.createUser());
 		List<UserDTO> users = userController.getUsers(1);

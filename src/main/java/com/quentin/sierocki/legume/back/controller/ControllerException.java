@@ -10,12 +10,12 @@ public class ControllerException extends FunctionnalException {
 		super(message);
 	}
 
-	public ControllerException(String path, String message, Throwable cause) {
-		super(path, message, cause);
+	public ControllerException(String messageRetour,String path, String message, Throwable cause) {
+		super(messageRetour,path, message, cause);
 	}
 
-	public ControllerException(String path, String message) {
-		super(path, message);
+	public ControllerException(String messageRetour,String path, String message) {
+		super(messageRetour,path, message);
 	}
 
 }

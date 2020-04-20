@@ -10,6 +10,7 @@ import com.quentin.sierocki.legume.back.domain.entity.ProductTypeDAO;
 import com.quentin.sierocki.legume.back.domain.entity.UserDAO;
 import com.quentin.sierocki.legume.back.domain.repository.ProductRepository;
 import com.quentin.sierocki.legume.back.domain.repository.ProductTypeRepository;
+import com.quentin.sierocki.legume.back.globals.Constants;
 
 @Service
 public class ProductService {
@@ -44,7 +45,8 @@ public class ProductService {
 
 			return productDAO;
 		} catch (Exception e) {
-			throw new ServiceException("ProductService->findProductById - " , e.getMessage(), e);
+			throw new ServiceException(Constants.ERROR_SERVICE, "ProductService->findProductById - ", e.getMessage(),
+					e);
 		}
 	}
 
@@ -69,7 +71,7 @@ public class ProductService {
 			ProductDAO productSaved = productRepository.save(productDAO);
 			return productSaved;
 		} catch (Exception e) {
-			throw new ServiceException("ProductService->save - ", e.getMessage(), e);
+			throw new ServiceException(Constants.ERROR_SERVICE, "ProductService->save - ", e.getMessage(), e);
 		}
 	}
 
@@ -78,19 +80,20 @@ public class ProductService {
 	 * commandProducts associées à CANCELED
 	 * 
 	 * @param idProduct
-	 * @param idProduct2 
+	 * @param idProduct2
 	 * @throws ServiceException
 	 */
 	public void cancelProduct(long idUser, long idProduct) throws ServiceException {
 		try {
 			ProductDAO productDAO = findProductById(idProduct);
-			if(idUser != productDAO.getFarmer().getId())
-				throw new ServiceException("L'id du vendeur du produit n'est pas le même que celui qui fait la demande.");
+			if (idUser != productDAO.getFarmer().getId())
+				throw new ServiceException(
+						"L'id du vendeur du produit n'est pas le même que celui qui fait la demande.");
 			commandService.changeStatusByProductId(idProduct, CommandStatus.CANCELED);
 			productDAO.setStatus(ProductStatus.UNAVAILABLE);
 			productRepository.save(productDAO);
 		} catch (Exception e) {
-			throw new ServiceException("ProductService->deleteProduct - " , e.getMessage(), e);
+			throw new ServiceException(Constants.ERROR_SERVICE, "ProductService->deleteProduct - ", e.getMessage(), e);
 		}
 	}
 
@@ -107,7 +110,8 @@ public class ProductService {
 			productDAO.setQuantity(productDAO.getQuantity() - quantity);
 			productRepository.save(productDAO);
 		} catch (Exception e) {
-			throw new ServiceException("ProductService->updateProductQuantity - " , e.getMessage(), e);
+			throw new ServiceException(Constants.ERROR_SERVICE, "ProductService->updateProductQuantity - ",
+					e.getMessage(), e);
 		}
 	}
 
@@ -122,7 +126,8 @@ public class ProductService {
 			productDAO.setQuantity(productDAO.getQuantity() + quantity);
 			productRepository.save(productDAO);
 		} catch (Exception e) {
-			throw new ServiceException("ProductService->updateProductQuantity - " , e.getMessage(), e);
+			throw new ServiceException(Constants.ERROR_SERVICE, "ProductService->updateProductQuantity - ",
+					e.getMessage(), e);
 		}
 	}
 

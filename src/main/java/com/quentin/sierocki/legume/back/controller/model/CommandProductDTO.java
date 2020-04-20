@@ -1,5 +1,7 @@
 package com.quentin.sierocki.legume.back.controller.model;
 
+import com.quentin.sierocki.legume.back.globals.Constants;
+
 public class CommandProductDTO {
 
 	private long id;
@@ -57,11 +59,11 @@ public class CommandProductDTO {
 
 	public void validate() throws ValidationException {
 		if (price <= 0)
-			throw new ValidationException(this.toString() + " price <=0.");
+			throw new ValidationException(Constants.ERROR_VALIDATION_PRICE,this.toString() + " price <=0.");
 		if (quantity <= 0)
-			throw new ValidationException(this.toString() + " quantity <=0.");
+			throw new ValidationException(Constants.ERROR_VALIDATION_QUANTITY,this.toString() + " quantity <=0.");
 		if (idProduct <= 0)
-			throw new ValidationException(this.toString() + " idProduct <=0.");
+			throw new ValidationException(Constants.ERROR_ID_PRODUCT,this.toString() + " idProduct <=0.");
 
 	}
 

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.quentin.sierocki.legume.back.domain.entity.UserDAO;
 import com.quentin.sierocki.legume.back.domain.repository.UserRepository;
-import com.quentin.sierocki.legume.back.exception.ResourceNotFoundException;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {

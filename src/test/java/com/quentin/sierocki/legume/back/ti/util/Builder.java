@@ -10,6 +10,7 @@ import com.quentin.sierocki.legume.back.controller.model.UserDTO;
 
 public class Builder {
 	
+	public static final float quantityInitialProduct = 50;
 	public static UserDTO createUser() {
 		UserDTO userDTO = new UserDTO();
 		userDTO.setAdress("1 rue de la cité");
@@ -41,8 +42,8 @@ public class Builder {
 	
 	public static ProductDTO createProduct() {
 		ProductDTO productDTO = new ProductDTO();
-		productDTO.setInitialQuantity(50);
-		productDTO.setQuantity(50);
+		productDTO.setInitialQuantity(quantityInitialProduct);
+		productDTO.setQuantity(quantityInitialProduct);
 		productDTO.setProductTypeName("tomate");
 		productDTO.setPrice(2);
 		return productDTO;
